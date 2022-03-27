@@ -23,16 +23,14 @@ x = zeros(2, numSamps);
 y = zeros(numSamps,1);
 
 for i = 1:numSamps-1
-
-    % Discrete Simulation
-%     x(:,i+1) = A_D * x(:,i) + B_W * (2*randn);
-
+    
     % Continuous Simulation
     x_dot = A_CL * x(:,i) + B_W * (2*randn);
     x(:,i+1) = x(:,i) + x_dot * dt;
 
     % Measurement Simulation
     y(i+1) = x(1,i+1) + 1*randn;
+    
 end
 
 % Simulation Plotting
@@ -46,18 +44,17 @@ xlabel('Time (s)')
 ylabel('Value')
 
 %% Part B
-
 % Q = E[w w']
 
 Q = 4;
 Q_D = B_W*Q*B_W';
-R_D = 75;
+R_D = 1;
 
 %% Part C
 
 % Preallocation & Initialization
 x_hat = zeros(2, numSamps);
-P = [0 0; 0 0];
+P = eye(2);
 priorP = zeros(numSamps,2);
 postP = zeros(numSamps,2);
 
