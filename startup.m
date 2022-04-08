@@ -11,8 +11,3 @@
 % Add All Subfolders of Current Folder
 dir = fileparts(which(mfilename));
 addpath(genpath(dir))
-
-% Figure Settings
-set(0,'DefaultFigureWindowStyle', 'docked');
-set(groot, 'defaultLineLinewidth', 1.75);
-set(0, 'defaultAxesFontSize', 18);
