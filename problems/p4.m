@@ -38,7 +38,7 @@ end
 
 A_D = expm(A*dt);
 
-Q_D = [1 0; 0 1];
+Q_D = [0.5 0; 0 0.5];
 R_D = 0.01;
 
 
@@ -51,7 +51,7 @@ postP = zeros(numSamps,2);
 for i = 1:numSamps-1
     
     % Time Update (Propagation - a priori)
-    x_hat(:,i+1) = A_D * x_hat(:,i) + sys.B * del;
+    x_hat(:,i+1) = A_D * x_hat(:,i) + sysd.B * del;
 
     P = A_D * P * A_D' + Q_D;
     priorP(i+1,1) = P(1,1);
@@ -109,6 +109,9 @@ X = zeros(2, numSamps);
 y = zeros(numSamps, 1);
 del = 1;
 
+sys = ss(A,B,H,0);
+sysd = c2d(sys,dt);
+
 % Dynamic Simulation
 for i = 1:numSamps-1
     xdot = A * X(:,i) + B * del;
@@ -133,7 +136,7 @@ postP = zeros(numSamps,2);
 for i = 1:numSamps-1
     
     % Time Update (Propagation - a priori)
-    x_hat(:,i+1) = A_D * x_hat(:,i);
+    x_hat(:,i+1) = A_D * x_hat(:,i) + sysd.B*del;
 
     P = A_D * P * A_D' + Q_D;
     priorP(i+1,1) = P(1,1);
@@ -203,8 +206,11 @@ A_A = [-2.62 12;
     -0.96 -2];
 
 A_D = expm(A_A*dt);
-Q_D = [5 0;0 0.1];
+Q_D = [5 0;0 0.04];
 R_D = [0.01 0;0 0.25];
+
+sys = ss(A,B,H,0);
+sysd = c2d(sys,dt);
 
 % Preallocation & Initialization
 x_hat = zeros(2, numSamps);
@@ -215,7 +221,7 @@ postP = zeros(numSamps,2);
 for i = 1:numSamps-1
     
     % Time Update (Propagation - a priori)
-    x_hat(:,i+1) = A_D * x_hat(:,i);
+    x_hat(:,i+1) = A_D * x_hat(:,i) + sysd.B*del;
 
     P = A_D * P * A_D' + Q_D;
     priorP(i+1,1) = P(1,1);

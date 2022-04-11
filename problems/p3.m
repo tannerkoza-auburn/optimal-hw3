@@ -20,12 +20,14 @@ xhat(3,1) = data.psi(1);
 xhat(4,1) = data.gyro(1);
 xhat(5,1) = data.v(1);
 
-procNoise = .001;
+procNoise = 0.01;
 measNoise = .01;
 
 P = eye(7); 
 
 Q = procNoise * eye(7);
+Q(6,6) = 0.00001;
+Q(7,7) = 0.00001;
 
 R = measNoise^2 * eye(5);
 
@@ -63,8 +65,13 @@ for i = 1:numSamps-1
     P = A*P*A' + Q;
     
     % Measurement Update
+    
+    if i >= 1300
+        H = zeros(5,7);
+    end
+    
     K = P*H'*(H*P*H' + R)^-1;
-
+    
     z = [data.E(i+1); data.N(i+1); data.psi(i+1); data.gyro(i+1);
         data.v(i+1)];
 
@@ -113,3 +120,11 @@ plot(data.t,xhat(7,:))
 title('Mesaurement Biases')
 legend('Gyro Bias','Radar Bias')
 
+%% Part B
+a = 0;
+b = 0;
+for i = 1:199
+    dt = data.t(i+1) - data.t(i);
+    a = a + data.gyro(i+1)*dt;
+    b = b + data.v(i+1)*dt;
+end

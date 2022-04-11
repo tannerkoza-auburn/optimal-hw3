@@ -116,7 +116,7 @@ N1 = vecnorm([std_x(1) std_x(2)]);
 
 %% Part E
 
-Q = 0.7;
+Q = 0.79;
 Q_D = B_W*Q*B_W'*dt;
 R_D = 1;
 
